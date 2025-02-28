@@ -26,14 +26,26 @@ class TaskListScreen extends StatefulWidget {
 
 class TaskListScreenState extends State<TaskListScreen> {
   final TextEditingController taskController = TextEditingController();
-  List<String> tasks = [];
+  List<Task> tasks = [];
 
   void addTask() {
     setState(() {
       if (taskController.text.isNotEmpty) {
-        tasks.add(taskController.text);
+        tasks.add(Task(name: taskController.text, isCompleted: false));
         taskController.clear();
       }
+    });
+  }
+
+  void toggleCompletion(int index) {
+    setState(() {
+      tasks[index].isCompleted = !tasks[index].isCompleted;
+    });
+  }
+
+  void deleteTask(int index) {
+    setState(() {
+      tasks.removeAt(index);
     });
   }
 
@@ -62,7 +74,24 @@ class TaskListScreenState extends State<TaskListScreen> {
                 itemCount: tasks.length,
                 itemBuilder: (context, index) {
                   return ListTile(
-                    title: Text(tasks[index]),
+                    title: Text(
+                      tasks[index].name,
+                      style: TextStyle(
+                        decoration: tasks[index].isCompleted
+                            ? TextDecoration.lineThrough
+                            : null,
+                      ),
+                    ),
+                    leading: Checkbox(
+                      value: tasks[index].isCompleted,
+                      onChanged: (value) {
+                        toggleCompletion(index);
+                      },
+                    ),
+                    trailing: IconButton(
+                      icon: Icon(Icons.delete),
+                      onPressed: () => deleteTask(index),
+                    ),
                   );
                 },
               ),
@@ -72,4 +101,11 @@ class TaskListScreenState extends State<TaskListScreen> {
       ),
     );
   }
+}
+
+class Task {
+  String name;
+  bool isCompleted;
+
+  Task({required this.name, required this.isCompleted});
 }
