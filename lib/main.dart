@@ -61,7 +61,10 @@ class TaskListScreenState extends State<TaskListScreen> {
           children: [
             TextField(
               controller: taskController,
-              decoration: InputDecoration(labelText: 'Enter Task'),
+              decoration: InputDecoration(
+                labelText: 'Enter Task',
+                border: OutlineInputBorder(),
+              ),
             ),
             SizedBox(height: 10),
             ElevatedButton(
@@ -73,24 +76,29 @@ class TaskListScreenState extends State<TaskListScreen> {
               child: ListView.builder(
                 itemCount: tasks.length,
                 itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text(
-                      tasks[index].name,
-                      style: TextStyle(
-                        decoration: tasks[index].isCompleted
-                            ? TextDecoration.lineThrough
-                            : null,
+                  return Card(
+                    margin: EdgeInsets.symmetric(vertical: 5),
+                    child: ListTile(
+                      contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      title: Text(
+                        tasks[index].name,
+                        style: TextStyle(
+                          decoration: tasks[index].isCompleted
+                              ? TextDecoration.lineThrough
+                              : null,
+                          color: tasks[index].isCompleted ? Colors.grey : Colors.black,
+                        ),
                       ),
-                    ),
-                    leading: Checkbox(
-                      value: tasks[index].isCompleted,
-                      onChanged: (value) {
-                        toggleCompletion(index);
-                      },
-                    ),
-                    trailing: IconButton(
-                      icon: Icon(Icons.delete),
-                      onPressed: () => deleteTask(index),
+                      leading: Checkbox(
+                        value: tasks[index].isCompleted,
+                        onChanged: (value) {
+                          toggleCompletion(index);
+                        },
+                      ),
+                      trailing: IconButton(
+                        icon: Icon(Icons.delete, color: Colors.red),
+                        onPressed: () => deleteTask(index),
+                      ),
                     ),
                   );
                 },
